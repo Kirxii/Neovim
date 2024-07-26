@@ -1,10 +1,15 @@
 return {
   "rachartier/tiny-devicons-auto-colors.nvim",
+  event = "VeryLazy",
+
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
-  event = "VeryLazy",
-  config = function()
-    require("tiny-devicons-auto-colors").setup()
-  end,
+
+  opts = {
+    cache = {
+      enabled = false,
+    },
+    autoreload = true,
+  },
 }
