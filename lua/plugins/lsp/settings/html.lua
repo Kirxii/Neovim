@@ -1,0 +1,26 @@
+-- → html.autoClosingTags                     default: true
+-- → html.autoCreateQuotes                    default: true
+-- → html.completion.attributeDefaultValue    default: "doublequotes"
+-- → html.customData                          default: []
+-- → html.format.contentUnformatted           default: "pre,code,textarea"
+-- → html.format.enable                       default: true
+-- → html.format.extraLiners                  default: "head, body, \/html"
+-- → html.format.indentHandlebars             default: false
+-- → html.format.indentInnerHtml              default: false
+-- → html.format.maxPreserveNewLines
+-- → html.format.preserveNewLines             default: true
+-- → html.format.templating                   default: false
+-- → html.format.unformatted                  default: "wbr"
+-- → html.format.unformattedContentDelimiter  default: ""
+-- → html.format.wrapAttributes               default: "auto"
+-- → html.format.wrapAttributesIndentSize
+-- → html.format.wrapLineLength               default: 120
+-- → html.hover.documentation                 default: true
+-- → html.hover.references                    default: true
+-- → html.mirrorCursorOnMatchingTag           default: false
+-- → html.suggest.html5                       default: true
+-- → html.trace.server                        default: "off"
+-- → html.validate.scripts                    default: true
+-- → html.validate.styles                     default: true
+
+return
