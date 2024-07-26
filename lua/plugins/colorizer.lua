@@ -5,8 +5,6 @@ return {
     filetypes = {
       "*",
       "!markdown",
-      "!text",
-      "!log",
     },
     user_default_options = {
       RGB = true, -- #RGB hex codes
