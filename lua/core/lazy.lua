@@ -20,7 +20,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- NOTE: LazyVim configurations
-require("lazy").setup {
+require("lazy").setup({
   spec = {
     { import = "themes" },
     { import = "plugins" },
@@ -31,9 +31,16 @@ require("lazy").setup {
     version = false,
   },
 
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "monochrome", "catppuccin" } },
   checker = { enabled = true },
   performance = {},
 
   change_detection = { enabled = false },
-}
+}, {
+  install = {
+    colorscheme = {
+      "monochrome",
+      "catppuccin",
+    },
+  },
+})

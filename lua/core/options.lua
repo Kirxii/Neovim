@@ -38,6 +38,9 @@ vim.opt.showbreak = "╎ "
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 
+-- End of buffer
+vim.opt.fillchars:append { eob = " " }
+
 -- Diagnostics virtual text prefix
 local signs = { Error = "", Warn = "", Hint = "󱠂", Info = "" }
 for type, icon in pairs(signs) do
