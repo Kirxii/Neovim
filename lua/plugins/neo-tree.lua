@@ -319,6 +319,14 @@ return {
       highlight_separator = "NeoTreeTabSeparatorInactive",
       highlight_separator_active = "NeoTreeTabSeparatorActive",
     },
+    event_handlers = {
+      {
+        event = "neo_tree_buffer_enter",
+        handler = function(arg)
+          vim.opt_local.relativenumber = true
+        end,
+      },
+    },
   },
 
   config = function(_, opts)

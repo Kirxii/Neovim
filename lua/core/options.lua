@@ -2,7 +2,8 @@
 vim.g.mapleader = " "
 
 -- Neovide configurations
-vim.o.guifont = "Cascadia Code NF,Twemoji Mozilla:h11"
+vim.o.guifont = "Cascadia Code NF,Twemoji Mozilla:h12"
+vim.g.neovide_scale_factor = 0.8
 vim.g.neovide_transparency = 1
 vim.g.neovide_fullscreen = false
 vim.g.neovide_hide_mouse_when_typing = true

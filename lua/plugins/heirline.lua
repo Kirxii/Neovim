@@ -2,14 +2,15 @@
 
 return {
   "rebelot/heirline.nvim",
+  lazy = false,
 
   opts = function()
     -- Snippets
-    local align = "%="
-    local space = " "
-    local round = { "", "" }
-    local half = { "▐", "▌" }
-    local full = { "█", "█" }
+    local align = { provider = "%=" }
+    local space = { provider = " " }
+    local round = { opening = { provider = "" }, closing = { provider = "" } }
+    local half = { opening = { provider = "▐" }, closing = { provider = "▌" } }
+    local full = { opening = { provider = "█" }, closing = { provider = "█" } }
 
     -- Libraries
     local utils = require("heirline.utils")
@@ -70,8 +71,8 @@ return {
       }, buffer or 0)
     end
     local is_active_buffer = conditions.is_active()
-    local has_repo_buffer = conditions.is_git_repo()
-    local has_diagnostic_buffer = conditions.has_diagnostics()
+    local has_repo_buffer = conditions.is_git_repo
+    local has_diagnostic_buffer = conditions.has_diagnostics
     local has_lsp_buffer = conditions.lsp_attached()
 
     -- Components
@@ -133,7 +134,7 @@ return {
     local ModeDisplay = {
       provider = function(self)
         local mode = self.mode
-        return ModeName[mode]
+        return "󰻂 " .. ModeName[mode]
       end,
       hl = function(self)
         local modeShort = self.mode:sub(1, 1)
@@ -145,7 +146,7 @@ return {
       end,
     }
 
-    local ModeInfo = {
+    local Mode = {
       init = function(self)
         self.mode = vim.fn.mode(1)
       end,
@@ -158,10 +159,10 @@ return {
         end),
       },
 
-      { provider = round[1] },
+      round["opening"],
       ModeDisplay,
-      { provider = round[2] },
-      { provider = space },
+      round["closing"],
+      space,
 
       hl = function(self)
         local modeShort = self.mode:sub(1, 1)
@@ -210,27 +211,28 @@ return {
       end,
     }
 
-    local FileFlags = {
-      {
-        condition = function(self)
-          return self.modified
-        end,
+    local FileSize = {}
 
-        provider = " ",
+    local FileModifiedFlag = {
+      condition = function(self)
+        return self.modified
+      end,
 
-        hl = { fg = "diag_warn", bg = "pmenu" },
-      },
-      {
-        condition = function(self)
-          return self.unmodifiable
-        end,
+      provider = " ",
 
-        provider = " ",
-        hl = { fg = "diag_error", bg = "pmenu" },
-      },
+      hl = { fg = "diag_warn", bg = "pmenu" },
     }
 
-    local FileInfo = {
+    local FileUnmodifiableFlag = {
+      condition = function(self)
+        return self.unmodifiable
+      end,
+
+      provider = " ",
+      hl = { fg = "diag_error", bg = "pmenu" },
+    }
+
+    local File = {
       init = function(self)
         self.filepath = vim.api.nvim_buf_get_name(0)
         self.filename = vim.fn.fnamemodify(self.filepath, ":t")
@@ -243,34 +245,163 @@ return {
 
       hl = { fg = "pmenu", bg = "background" },
 
-      { provider = round[1] },
+      round["opening"],
       FileIcon,
       FileName,
-      FileFlags,
-      { provider = round[2] },
-      {
-        provider = function()
-          return space
-        end,
-      },
+      FileSize,
+      FileModifiedFlag,
+      FileUnmodifiableFlag,
+      round["closing"],
+      space,
     }
 
     local GitBranch = {
       provider = function(self)
         return " " .. self.status_dict.head
       end,
-      hl = { bold = true },
+      hl = { fg = "diag_hint", bold = true },
     }
 
-    local GitInfo = {
-      condition = conditions.is_git_repo,
+    local GitAdd = {
+      provider = function(self)
+        local count = self.status_dict.added or 0
+        return count > 0 and ("  " .. count)
+      end,
+      hl = { fg = "git_add" },
+    }
+
+    local GitChange = {
+      provider = function(self)
+        local count = self.status_dict.changed or 0
+        return count > 0 and ("  " .. count)
+      end,
+      hl = { fg = "git_change" },
+    }
+
+    local GitDelete = {
+      provider = function(self)
+        local count = self.status_dict.removed or 0
+        return count > 0 and ("  " .. count)
+      end,
+      hl = { fg = "git_del" },
+    }
+
+    local Git = {
+      condition = has_repo_buffer,
 
       init = function(self)
         self.status_dict = vim.b.gitsigns_status_dict
         self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
       end,
 
-      GitBranch,
+      static = {
+        add = " ",
+        change = " ",
+        delete = " ",
+      },
+
+      hl = { fg = "color_column", bg = "background" },
+
+      round["opening"],
+      {
+        hl = { fg = "normal", bg = "color_column" },
+
+        GitBranch,
+        GitAdd,
+        GitChange,
+        GitDelete,
+      },
+      round["closing"],
+      space,
+    }
+
+    local DiagnosticsError = {
+      provider = function(self)
+        -- 0 is just another output, we can decide to print it or not!
+        local error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text
+        return self.errors > 0 and (error_icon .. self.errors .. " ")
+      end,
+      hl = { fg = "diag_error" },
+    }
+
+    local DiagnosticsWarn = {
+      provider = function(self)
+        local warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text
+        return self.warnings > 0 and (warn_icon .. self.warnings .. " ")
+      end,
+      hl = { fg = "diag_warn" },
+    }
+
+    local DiagnosticsInfo = {
+      provider = function(self)
+        local info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text
+        return self.info > 0 and (info_icon .. self.info .. " ")
+      end,
+      hl = { fg = "diag_info" },
+    }
+
+    local DiagnosticsHint = {
+      provider = function(self)
+        local hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text
+        return self.hints > 0 and (hint_icon .. self.hints .. " ")
+      end,
+      hl = { fg = "diag_hint" },
+    }
+
+    local Diagnostics = {
+      condition = has_diagnostic_buffer,
+
+      init = function(self)
+        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+        self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+      end,
+
+      DiagnosticsError,
+      DiagnosticsWarn,
+      DiagnosticsInfo,
+      DiagnosticsHint,
+    }
+
+    local FileEncodingIcon = {
+      static = {
+        icon = {
+          ["utf-8"] = "󰉿",
+          ["utf-16"] = "󰊀",
+          ["utf-32"] = "󰊁",
+          ["utf-8mb4"] = "󰊂",
+          ["utf-16le"] = "󰊃",
+          ["utf-16be"] = "󰊄",
+        },
+      },
+
+      provider = function(self)
+        return self.icon[self.encoding] .. " "
+      end,
+
+      hl = { fg = "normal", bg = "color_column" },
+    }
+
+    local FileEncodingValue = {
+      provider = function(self)
+        return self.encoding:upper()
+      end,
+
+      hl = { fg = "normal", bg = "color_column" },
+    }
+
+    local FileEncoding = {
+      init = function(self)
+        self.encoding = (vim.bo.fenc ~= "" and vim.bo.fenc) or vim.o.enc
+      end,
+
+      hl = { fg = "color_column", bg = "background" },
+
+      round["opening"],
+      FileEncodingIcon,
+      FileEncodingValue,
+      round["closing"],
     }
 
     local Breadcrumb = {
@@ -292,13 +423,14 @@ return {
         return is_file_buffer()
       end,
 
-      ModeInfo,
-      FileInfo,
-      GitInfo,
-      {
-        provider = align,
-        hl = { bg = "background" },
-      },
+      hl = { bg = "background" },
+
+      Mode,
+      File,
+      Git,
+      align,
+      Diagnostics,
+      FileEncoding,
     }
 
     local OthersStatusline = {}
@@ -310,18 +442,14 @@ return {
 
     return {
       -- NOTE: %C is the fold column
-      -- NOTE: %l is the line number (absolute)
-      -- NOTE: %r is the line number (relative)
+      -- %l is the line number (absolute)
+      -- %r is the line number (relative)
 
       statusline = Statusline,
       winbar = { Breadcrumb },
       tabline = {},
       statuscolumn = {
         {
-          condition = function()
-            return is_file_buffer()
-          end,
-
           provider = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . ' ' : v:lnum) : ''}%=%s",
         },
       },

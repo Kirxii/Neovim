@@ -16,4 +16,4 @@ keyset({ "n", "v" }, "0", "(v:count == 0 ? 'g0' : '0')", expr())
 keyset({ "n", "v" }, "$", "(v:count == 0 ? 'g$' : '$')", expr())
 
 keyset("n", "<leader>qq", ":qa<CR>", silent("Quit Neovim"))
-keyset("t", "<esc>", "<C-\\><C-n>", silent())
+keyset("t", "<esc>", "<c-\\><c-n>", silent())
