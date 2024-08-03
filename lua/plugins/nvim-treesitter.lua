@@ -1,5 +1,10 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  lazy = true,
+  event = {
+    "BufReadPre",
+    "BufNewFile",
+  },
 
   dependencies = {
     "windwp/nvim-ts-autotag",
@@ -8,7 +13,7 @@ return {
   },
 
   config = function()
-    require("nvim-treesitter.configs").setup({
+    require("nvim-treesitter.configs").setup {
       modules = {},
       ignore_install = {},
       ensure_installed = {
@@ -83,22 +88,22 @@ return {
           include_surrounding_whitespace = true,
         },
       },
-    })
+    }
 
-    require("treesitter-context").setup({
+    require("treesitter-context").setup {
       enable = false,
       max_lines = 5,
       min_window_height = 20,
       line_numbers = true,
-    })
+    }
 
-    require("nvim-ts-autotag").setup({
+    require("nvim-ts-autotag").setup {
       opts = {
         -- Defaults
         enable_close = true, -- Auto close tags
         enable_rename = true, -- Auto rename pairs of tags
         enable_close_on_slash = false, -- Auto close on trailing </
       },
-    })
+    }
   end,
 }

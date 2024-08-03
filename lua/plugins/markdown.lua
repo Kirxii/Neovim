@@ -28,5 +28,8 @@ return {
         "◇",
       },
     },
+    latex = {
+      enabled = false,
+    },
   },
 }

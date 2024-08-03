@@ -1,3 +1,4 @@
+-- NOTE: Configs to the theme itself
 return {
   "catppuccin/nvim",
   name = "catppuccin",
