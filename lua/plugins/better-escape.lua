@@ -6,11 +6,6 @@ return {
   opts = {
     timeout = vim.o.timeoutlen,
     mappings = {
-      n = {
-        [" "] = {
-          ["<tab>"] = "<esc>",
-        },
-      },
       i = {
         j = {
           j = "<esc>",
@@ -28,6 +23,21 @@ return {
           h = "<C-\\><C-n>",
         },
       },
+      v = {
+        j = {
+          k = false,
+        },
+        k = {
+          j = false,
+        },
+      },
     },
   },
+  config = function(_, opts)
+    local keymap = vim.keymap.set
+
+    require("better_escape").setup(opts)
+
+    keymap("n", "<leader><tab>", "@p")
+  end,
 }

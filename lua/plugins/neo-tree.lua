@@ -43,9 +43,9 @@ return {
       },
 
       icon = {
-        folder_closed = "",
-        folder_open = "",
-        folder_empty = "󰉖",
+        folder_closed = "",
+        folder_open = "",
+        folder_empty = "",
         default = "*",
         highlight = "NeoTreeFileIcon",
       },
@@ -64,33 +64,33 @@ return {
       git_status = {
         symbols = {
           -- Change type
-          added = "+", -- or "✚", but this is redundant info if you use git_status_colors on the name
-          modified = "~", -- or "", but this is redundant info if you use git_status_colors on the name
-          deleted = "x", -- this can only be used in the git_status source
+          added = "", -- or "✚", but this is redundant info if you use git_status_colors on the name
+          modified = "", -- or "", but this is redundant info if you use git_status_colors on the name
+          deleted = "", -- this can only be used in the git_status source
           renamed = "󰁕", -- this can only be used in the git_status source
 
           -- Status type
-          untracked = "",
-          ignored = "",
-          unstaged = "󰄱",
-          staged = "",
+          untracked = "",
+          ignored = "",
+          unstaged = "",
+          staged = "",
           conflict = "",
         },
+      },
 
-        diagnostics = {
-          symbols = {
-            hint = "󰌵",
-            info = "",
-            warn = "",
-            error = "",
-          },
+      diagnostics = {
+        symbols = {
+          hint = "󰌵",
+          info = "",
+          warn = "",
+          error = "",
+        },
 
-          highlights = {
-            hint = "DiagnosticSignHint",
-            info = "DiagnosticSignInfo",
-            warn = "DiagnosticSignWarn",
-            error = "DiagnosticSignError",
-          },
+        highlights = {
+          hint = "DiagnosticSignHint",
+          info = "DiagnosticSignInfo",
+          warn = "DiagnosticSignWarn",
+          error = "DiagnosticSignError",
         },
       },
 

@@ -44,3 +44,11 @@ require("lazy").setup({
     },
   },
 })
+
+local colorscheme_read = io.open("C:/Users/K/Appdata/Local/nvim/lua/core/colorscheme", "r")
+if colorscheme_read then
+  vim.cmd("colorscheme " .. colorscheme_read:read("*a"))
+  colorscheme_read:close()
+else
+  vim.cmd("colorscheme catppuccin-mocha")
+end

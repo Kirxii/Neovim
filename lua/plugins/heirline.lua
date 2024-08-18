@@ -16,41 +16,59 @@ return {
     local utils = require("heirline.utils")
     local conditions = require("heirline.conditions")
 
+    local hl = require("commons.color.hl")
+    local nil_highl = hl.get_hl
+    local fal_highl = hl.get_hl_with_fallback
+    local nil_color = hl.get_color
+    local fal_color = hl.get_color_with_fallback
+
     local get_hi = function(highlight)
       return utils.get_highlight(highlight)
     end
     local setup_colors = function()
       local colors = {
 				-- stylua: ignore start
-        background   = get_hi("Normal").bg,
+        background   = nil_color("Normal", "bg"),
         color_column = get_hi("ColorColumn").bg,
         pmenu        = get_hi("PMenu").bg,
         normal       = get_hi("Normal").fg,
         tabline      = get_hi("TabLine").bg,
         statusline   = get_hi("StatusLine").bg,
-        string       = get_hi("String").fg                     or get_hi("Normal").fg,
-        func         = get_hi("Function").fg                   or get_hi("Normal").fg,
-        type         = get_hi("Type").fg                       or get_hi("Normal").fg,
-        debug        = get_hi("Debug").fg                      or get_hi("Normal").fg,
-        comment      = get_hi("Comment").fg                    or get_hi("Normal").fg,
-        directory    = get_hi("Directory").fg                  or get_hi("Normal").fg,
-        constant     = get_hi("Constant").fg                   or get_hi("Normal").fg,
-        statement    = get_hi("Statement").fg                  or get_hi("Normal").fg,
-        special      = get_hi("Special").fg                    or get_hi("Normal").fg,
-        diag_warn    = get_hi("DiagnosticVirtualTextWarn").fg  or get_hi("Normal").fg,
-        diag_warn_2  = get_hi("DiagnosticVirtualTextWarn").bg  or get_hi("Normal").bg,
-        diag_error   = get_hi("DiagnosticVirtualTextError").fg or get_hi("Normal").fg,
-        diag_error_2 = get_hi("DiagnosticVirtualTextErro").bg  or get_hi("Normal").bg,
-        diag_hint    = get_hi("DiagnosticVirtualTextHint").fg  or get_hi("Normal").fg,
-        diag_hint_2  = get_hi("DiagnosticVirtualTextHint").bg  or get_hi("Normal").bg,
-        diag_info    = get_hi("DiagnosticVirtualTextInfo").fg  or get_hi("Normal").fg,
-        diag_info_2  = get_hi("DiagnosticVirtualTextInfo").bg  or get_hi("Normal").bg,
-        diag_ok      = get_hi("DiagnosticVirtualTextOk").fg    or get_hi("Normal").fg,
-        diag_ok_2    = get_hi("DiagnosticVirtualTextOk").bg    or get_hi("Normal").bg,
-        tabline_sel  = get_hi("TabLineSel").bg                 or get_hi("Visual").bg,
-        git_del      = get_hi("GitsignsDelete").fg             or get_hi("DiffRemoved").fg or get_hi("DiffDelete").bg,
-        git_add      = get_hi("GitsignsAdd").fg                or get_hi("DiffAdded").fg   or get_hi("DiffAdded").bg,
-        git_change   = get_hi("GitsignsChange").fg             or get_hi("DiffChange").fg  or get_hi("DiffChange").bg,
+
+        string       = fal_color({ "String", "Normal" }, "fg"),
+        func         = fal_color({ "Function", "Normal" }, "fg"),
+        type         = fal_color({ "Type", "Normal" }, "fg"),
+        debug        = fal_color({ "Debug", "Normal" }, "fg"),
+        comment      = fal_color({ "Comment", "Normal" }, "fg"),
+        directory    = fal_color({ "Directory", "Normal" }, "fg"),
+        constant     = fal_color({ "Constant", "Normal" }, "fg"),
+        statement    = fal_color({ "Statement", "Normal" }, "fg"),
+        special      = fal_color({ "Special", "Normal" }, "fg"),
+        tabline_sel  = fal_color({ "TabLineSel", "Visual" }, "bg"),
+
+        diag_warn_fg  = fal_color({ "DiagnosticVirtualTextWarn", "Normal" }, "fg"),
+        diag_warn_bg  = fal_color({ "DiagnosticVirtualTextWarn", "Normal" }, "bg"),
+        diag_error_fg = fal_color({ "DiagnosticVirtualTextError", "Normal" }, "fg"),
+        diag_error_bg = fal_color({ "DiagnosticVirtualTextError", "Normal" }, "bg"),
+        diag_hint_fg  = fal_color({ "DiagnosticVirtualTextHint", "Normal" }, "fg"),
+        diag_hint_bg  = fal_color({ "DiagnosticVirtualTextHint", "Normal" }, "bg"),
+        diag_info_fg  = fal_color({ "DiagnosticVirtualTextInfo", "Normal" }, "fg"),
+        diag_info_bg  = fal_color({ "DiagnosticVirtualTextInfo", "Normal" }, "bg"),
+        diag_ok_fg    = fal_color({ "DiagnosticVirtualTextOk", "Normal" }, "fg"),
+        diag_ok_bg    = fal_color({ "DiagnosticVirtualTextOk", "Normal" }, "bg"),
+
+        git_del      = get_hi("GitsignsDelete").fg or get_hi("DiffRemoved").fg or get_hi("DiffDelete").bg,
+        git_add      = get_hi("GitsignsAdd").fg or get_hi("DiffAdded").fg or get_hi("DiffAdded").bg,
+        git_change   = get_hi("GitsignsChange").fg or get_hi("DiffChange").fg or get_hi("DiffChange").bg,
+
+				-- NOTE: HiPhish/rainbow-delimiters.nvim dependency
+				red    = fal_color("RainbowDelimiterRed",    "fg", "#ff0000"),
+				orange = fal_color("RainbowDelimiterOrange", "fg", "#ff8800"),
+				yellow = fal_color("RainbowDelimiterYellow", "fg", "#ffff00"),
+				green  = fal_color("RainbowDelimiterGreen",  "fg", "#00ff00"),
+				cyan   = fal_color("RainbowDelimiterCyan",   "fg", "#00ffff"),
+				blue   = fal_color("RainbowDelimiterBlue",   "fg", "#0000ff"),
+				violet = fal_color("RainbowDelimiterViolet", "fg", "#ff00ff"),
         -- stylua: ignore end
       }
 
@@ -72,10 +90,10 @@ return {
         buftype = { "nofile", "prompt", "help", "quickfix" },
       }, buffer or 0)
     end
-    local is_active_buffer = conditions.is_active()
+    local is_active_buffer = conditions.is_active
     local has_repo_buffer = conditions.is_git_repo
     local has_diagnostic_buffer = conditions.has_diagnostics
-    local has_lsp_buffer = conditions.lsp_attached()
+    local has_lsp_buffer = conditions.lsp_attached
 
     -- Components
     local ModeName = {
@@ -121,19 +139,19 @@ return {
 
     local ModeColors = {
 			-- stylua: ignore start
-      ["n"]   = "diag_info",
-      ["i"]   = "diag_ok",
-      ["v"]   = "diag_hint",
-      ["V"]   = "diag_hint",
-      ["\22"] = "diag_hint",
-      ["c"]   = "diag_warn",
-      ["s"]   = "diag_warn",
-      ["S"]   = "diag_warn",
-      ["\19"] = "diag_warn",
-      ["R"]   = "diag_error",
-      ["r"]   = "diag_error",
-      ["!"]   = "diag_error",
-      ["t"]   = "diag_info",
+      ["n"]   = "blue",
+      ["i"]   = "green",
+      ["v"]   = "cyan",
+      ["V"]   = "cyan",
+      ["\22"] = "cyan",
+      ["c"]   = "yellow",
+      ["s"]   = "orange",
+      ["S"]   = "orange",
+      ["\19"] = "orange",
+      ["R"]   = "red",
+      ["r"]   = "red",
+      ["!"]   = "red",
+      ["t"]   = "blue",
       -- stylua: ignore end
     }
 
@@ -208,25 +226,23 @@ return {
       end,
       hl = function(self)
         if self.modified then
-          return { fg = "diag_warn", bg = "pmenu" }
+          return { fg = "yellow", bg = "pmenu" }
         elseif self.unmodifiable then
-          return { fg = "diag_warn", bg = "pmenu" }
+          return { fg = "yellow", bg = "pmenu" }
         end
 
         return { fg = "normal", bg = "pmenu" }
       end,
     }
 
-    local FileSize = {}
-
     local FileModifiedFlag = {
       condition = function(self)
         return self.modified
       end,
 
-      provider = " ",
+      provider = " []",
 
-      hl = { fg = "diag_warn", bg = "pmenu" },
+      hl = { fg = "yellow", bg = "pmenu" },
     }
 
     local FileUnmodifiableFlag = {
@@ -234,8 +250,30 @@ return {
         return self.unmodifiable
       end,
 
-      provider = " ",
-      hl = { fg = "diag_error", bg = "pmenu" },
+      provider = " []",
+      hl = { fg = "red", bg = "pmenu" },
+    }
+
+    local FileSize = {
+      provider = function(self)
+        local filesize = self.filesize
+        local suffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" } -- Good luck surpassing TB
+
+        if type(filesize) ~= "number" or filesize <= 0 then
+          return ""
+        end
+
+        local suffix = 1
+        while filesize > 1024 do
+          filesize = filesize / 1024
+          suffix = suffix + 1
+        end
+        filesize = tonumber(string.format("%.1f", filesize))
+
+        return " [" .. filesize .. suffixes[suffix] .. "]"
+      end,
+
+      hl = { fg = "normal", bg = "pmenu" },
     }
 
     local File = {
@@ -244,6 +282,8 @@ return {
         self.filename = vim.fn.fnamemodify(self.filepath, ":t")
         self.filedirectory = vim.fn.fnamemodify(self.filepath, ":h")
         self.fileextension = vim.fn.fnamemodify(self.filepath, ":e")
+
+        self.filesize = vim.fn.getfsize(self.filepath)
 
         self.modified = vim.bo.modified
         self.unmodifiable = not vim.bo.modifiable or vim.bo.readonly
@@ -254,9 +294,9 @@ return {
       round["opening"],
       FileIcon,
       FileName,
-      FileSize,
       FileModifiedFlag,
       FileUnmodifiableFlag,
+      FileSize,
       round["closing"],
       space,
     }
@@ -265,7 +305,7 @@ return {
       provider = function(self)
         return " " .. self.status_dict.head
       end,
-      hl = { fg = "diag_hint", bold = true },
+      hl = { fg = "normal", bold = true },
     }
 
     local GitAdd = {
@@ -327,7 +367,7 @@ return {
         local error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text
         return self.errors > 0 and (error_icon .. self.errors .. " ")
       end,
-      hl = { fg = "diag_error" },
+      hl = { fg = "red" },
     }
 
     local DiagnosticsWarn = {
@@ -335,7 +375,7 @@ return {
         local warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text
         return self.warnings > 0 and (warn_icon .. self.warnings .. " ")
       end,
-      hl = { fg = "diag_warn" },
+      hl = { fg = "yellow" },
     }
 
     local DiagnosticsInfo = {
@@ -343,7 +383,7 @@ return {
         local info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text
         return self.info > 0 and (info_icon .. self.info .. " ")
       end,
-      hl = { fg = "diag_info" },
+      hl = { fg = "blue" },
     }
 
     local DiagnosticsHint = {
@@ -351,7 +391,7 @@ return {
         local hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text
         return self.hints > 0 and (hint_icon .. self.hints .. " ")
       end,
-      hl = { fg = "diag_hint" },
+      hl = { fg = "cyan" },
     }
 
     local Diagnostics = {
@@ -456,6 +496,10 @@ return {
       tabline = {},
       statuscolumn = {
         {
+          condition = function()
+            return is_active_buffer()
+          end,
+
           provider = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . ' ' : v:lnum) : ''}%=%s",
         },
       },

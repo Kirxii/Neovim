@@ -5,6 +5,14 @@ return {
     filetypes = {
       "*",
       "!markdown",
+      "!neo-tree",
+      "!neo-tree-popup",
+      "!TelescopePrompt",
+      "!lazy",
+      "!mason",
+      "!noice", -- Command Line
+      "!popup",
+      "!prompt",
     },
     user_default_options = {
       RGB = true, -- #RGB hex codes

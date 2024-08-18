@@ -24,6 +24,11 @@ return {
         "<cmd>Telescope diagnostics<cr>",
         desc = "Search diagnostics",
       },
+      {
+        "<leader>th",
+        "<cmd>Telescope highlights<cr>",
+        desc = "Search highlight colors",
+      },
     },
 
     dependencies = {

@@ -4,16 +4,16 @@ return {
 
   opts = {
     signs = {
-      add = { text = "🭲" },
-      change = { text = "🭲" },
+      add = { text = "│" },
+      change = { text = "│" },
       delete = { text = "‾" },
       topdelete = { text = "_" },
       changedelete = { text = "~" },
       untracked = { text = "╎" },
     },
     signs_staged = {
-      add = { text = "🭲" },
-      change = { text = "🭲" },
+      add = { text = "│" },
+      change = { text = "│" },
       delete = { text = "‾" },
       topdelete = { text = "_" },
       changedelete = { text = "~" },
