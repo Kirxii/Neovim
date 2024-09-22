@@ -8,7 +8,7 @@ return {
 
   opts = {
     cache = {
-      enabled = false,
+      enabled = true,
       path = vim.fn.stdpath("cache") .. "/tiny-devicons-auto-colors-cache.json",
     },
 

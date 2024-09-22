@@ -8,5 +8,10 @@ return {
       smart_indent_cap = true,
     },
     scope = { enabled = false },
+    exclude = {
+      filetypes = {
+        "dashboard",
+      },
+    },
   },
 }

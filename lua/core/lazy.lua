@@ -5,50 +5,44 @@ require("core.keymaps")
 -- NOTE: This makes sure that LazyVim is able to run
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out, "WarningMsg" },
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 vim.opt.rtp:prepend(lazypath)
 
 -- NOTE: LazyVim configurations
 require("lazy").setup({
-  spec = {
-    { import = "themes" },
-    { import = "plugins" },
-  },
+	spec = {
+		{ import = "themes" },
+		{ import = "plugins" },
+	},
 
-  defaults = {
-    lazy = false,
-    version = false,
-  },
+	defaults = {
+		lazy = false,
+		version = false,
+	},
 
-  install = { colorscheme = { "monochrome", "catppuccin" } },
-  checker = { enabled = true },
-  performance = {},
+	install = { colorscheme = { "catppuccin" } },
+	checker = { enabled = true },
+	performance = {},
 
-  change_detection = { enabled = false },
+	change_detection = { enabled = false },
 }, {
-  install = {
-    colorscheme = {
-      "monochrome",
-      "catppuccin",
-    },
-  },
+	install = {
+		colorscheme = {
+			"monochrome",
+			"catppuccin",
+		}
+	},
 })
 
-local colorscheme_read = io.open("C:/Users/K/Appdata/Local/nvim/lua/core/colorscheme", "r")
-if colorscheme_read then
-  vim.cmd("colorscheme " .. colorscheme_read:read("*a"))
-  colorscheme_read:close()
-else
-  vim.cmd("colorscheme catppuccin-mocha")
-end
+ require("core.utils")

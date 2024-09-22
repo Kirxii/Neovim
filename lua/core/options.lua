@@ -2,7 +2,7 @@
 vim.g.mapleader = " "
 
 -- Neovide configurations
-vim.o.guifont = "JetBrainsMono Nerd Font Mono,Twemoji Mozilla:h12"
+vim.o.guifont = "JetBrainsMono Nerd Font Mono,Twemoji Mozilla:h9"
 vim.g.neovide_scale_factor = 0.75
 vim.g.neovide_transparency = 1
 vim.g.neovide_fullscreen = false

@@ -2,7 +2,8 @@
 
 return {
   "rebelot/heirline.nvim",
-  lazy = false,
+  lazy = true,
+  event = "UiEnter",
 
   opts = function()
     -- Snippets
